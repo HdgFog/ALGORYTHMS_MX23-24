@@ -39,3 +39,25 @@ void twocolor(graph *g) {
 // другие функции оставляем без изменений
 void process_edge(int x, int y);
 int complement(int color);
+int main() {
+    graph g;
+    g.nvertices = 6;
+    // инициализация графа, добавление ребер и прочие действия...
+
+    twocolor(&g);
+
+    // Выводим результат раскраски
+    int i;
+    printf("Результат раскраски:\n");
+    for (i = 1; i <= g.nvertices; i++) {
+        if (color[i] == WHITE) {
+            printf("Вершина %d: Белый\n", i);
+        } else if (color[i] == BLACK) {
+            printf("Вершина %d: Черный\n", i);
+        } else {
+            printf("Вершина %d: Не раскрашена\n", i);
+        }
+    }
+
+    return 0;
+}
