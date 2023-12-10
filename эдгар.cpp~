@@ -1,0 +1,25 @@
+#include <iostream>
+using namespace std;
+
+
+bool finished = false ; //Найдены все решения? 
+backtrack ( int а [ ] , int k , data input ){
+
+    iпt c [МAXCANDIDATES ) ; //Кандидаты ДЛЯ следующей позиции 
+    iпt пcaпdidate s ; // Количество кандидатов на следующую позицию
+    iпt i ; // Счетчик 
+    
+    if ( is_a_solut ion ( a , k, input ) )
+        process_solut ioп ( a , k , input );
+    else {
+        k = k+l ;
+        construct_candidates ( a , k , input ; с , &пcandidates ) ;
+        for ( i=O ; i < ncaпdidates ; i++ ) {
+            a[k] = c [ i ] ;
+            make _move ( a , k, iпput ) ;
+            backt rack ( a , k, input: ) ;
+            unrnake_move ( a , k , iпput ) ;
+            if ( fiпished ) return ; 
+            }
+        }   
+    }
