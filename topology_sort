@@ -54,6 +54,21 @@ void insert_edge(graph* g, int x, int y, bool directed) {
         g->nedges++;
 }
 
+void display(graph* g) {
+    int i;
+    edgenode *p;
+    for (i = 1; i <= g->nedges; i++) {
+        cout << i << ": ";
+        p = g->edges[i];
+        while (p != NULL) {
+            cout << " " << p->y;
+            p = p->next;
+        }
+        cout << '\n';
+    }
+    cout << endl;
+}
+
 void process_vertex_late(int v) {
     processed[v] = 1;               /* Помечаем вершину как обработанную */
     sort_result[--finished] = v;    /* Результат топологической сортировки */
@@ -95,7 +110,7 @@ struct stack {
 } sorted;
 
 /* Функция добавления элемента в стек */
-void push(struct stack *s, int x) {
+void push(stack *s, int x) {
     if (s->top == MAXV - 1) {
     printf("Error: stack overflow\n");
 } else
@@ -103,7 +118,7 @@ void push(struct stack *s, int x) {
 }
 
 /* Функция удаления элемента из стека */
-int pop(struct stack *s) { 
+int pop(stack *s) { 
     if (s->top == -1) {
     cout << "Error: stack underflow\n";
     return -1;
@@ -112,12 +127,12 @@ int pop(struct stack *s) {
 }
 
 /* Функция инициализации стека */
-void init_stack(struct stack *s) {
+void init_stack(stack *s) {
     s->top = -1;
 }
 
 /* Печать элементов стека */
-void print_stack(struct stack *s) {
+void print_stack(stack *s) {
     for (int i = s->top; i >= 0; i--)
         cout << s->items[i] << " ";
     cout << '\n';
@@ -162,14 +177,21 @@ void topsort(graph *g) {
             dfs(g, i);      /* Начинаем обход с вершины i */
     }
 
-    print_stack(&sorted); /* Вывод топологического упорядочивания */
+    print_stack(&sorted);   /* Вывод топологического упорядочивания */
 }
 
 int main() {
     graph g;
     init_graph(&g, true);
-    // Здесь предполагается инициализация графа g
-    // ...
-    topsort(&g); // Вызов функции топологической сортировки
+    
+    insert_edge(&g, 1, 2, true);   /* Добавление ребра из вершины 1 в вершину 2 */  
+    insert_edge(&g, 2, 3, true);   /* Добавление ребра из вершины 2 в вершину 3 */  
+    insert_edge(&g, 3, 4, true);   /* Добавление ребра из вершины 3 в вершину 4 */  
+    insert_edge(&g, 4, 1, true);   /* Добавление ребра из вершины 4 в вершину 1 */  
+    insert_edge(&g, 4, 2, true);   /* Добавление ребра из вершины 4 в вершину 2 */  
+
+    display(&g);    /* Стображение графа до сортировки */
+    topsort(&g);    /* Вызов функции топологической сортировки */
+    display(&g);    /* Стображение графа после сортировки */
     return 0;
 }
