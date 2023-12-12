@@ -3,93 +3,97 @@
 /// @author's Shemyakin Dmitriy Krykovich Sonya Solonitsyn Maksim
 
 
-#include "iostream"
-#include "vector"
-#include "stack"
-#include "algorithm"
+#include<iostream>
+#include<list>
+#include<stack>
+#include<vector>
 
 using namespace std;
 
 class Graph {
+    int V; // Количество вершин
+    list<int> *adj; // Список смежности
+
 public:
-    int nvertices;
-    vector<vector<int>> edges;
-    vector<bool> discovered;
-
-    Graph(int n) : nvertices(n), edges(n + 1), discovered(n + 1, false) {}
-
-    void addEdge(int from, int to) {
-        edges[from].push_back(to);
-    }
+    Graph(int V);
+    void addEdge(int v, int w);
+    void fillOrder(int v, vector<bool>& visited, stack<int>& stack);
+    void DFSUtil(int v, vector<bool>& visited);
+    void printSCCs();
+    Graph getTranspose();
 };
 
-void dfs(Graph& g, int vertex, stack<int>& order) {
-    g.discovered[vertex] = true;
-    for (int i : g.edges[vertex]) {
-        if (!g.discovered[i]) {
-            dfs(g, i, order);
-        }
-    }
-    order.push(vertex);
+Graph::Graph(int V) {
+    this->V = V;
+    adj = new list<int>[V];
 }
 
-Graph transpose(const Graph& g) {
-    Graph gt(g.nvertices);
-    for (int i = 1; i <= g.nvertices; ++i) {
-        for (int j : g.edges[i]) {
-            gt.addEdge(j, i);
-        }
-    }
-    return gt;
+void Graph::addEdge(int v, int w) {
+    adj[v].push_back(w);
 }
 
-void dfs2(const Graph& g, int vertex) {
-    cout << vertex << " ";
-    for (int i : g.edges[vertex]) {
-        if (!g.discovered[i]) {
-            g.discovered[i] = true;
-            dfs2(g, i);
-        }
-    }
+void Graph::fillOrder(int v, vector<bool>& visited, stack<int>& stack) {
+    visited[v] = true;
+
+    for (auto i = adj[v].begin(); i != adj[v].end(); ++i)
+        if (!visited[*i])
+            fillOrder(*i, visited, stack);
+
+    stack.push(v);
 }
 
-void strongComponents(Graph& g) {
-    stack<int> order;
-    for (int i = 1; i <= g.nvertices; ++i) {
-        if (!g.discovered[i]) {
-            dfs(g, i, order);
+void Graph::DFSUtil(int v, vector<bool>& visited) {
+    visited[v] = true;
+    cout << v << " ";
+
+    for (auto i = adj[v].begin(); i != adj[v].end(); ++i)
+        if (!visited[*i])
+            DFSUtil(*i, visited);
+}
+
+Graph Graph::getTranspose() {
+    Graph g(V);
+    for (int v = 0; v < V; v++) {
+        for (auto i = adj[v].begin(); i != adj[v].end(); ++i) {
+            g.adj[*i].push_back(v);
         }
     }
+    return g;
+}
 
-    Graph gt = transpose(g);
-    fill(g.discovered.begin(), g.discovered.end(), false);
+void Graph::printSCCs() {
+    stack<int> stack;
 
-    int componentsFound = 0;
-    while (!order.empty()) {
-        int v = order.top();
-        order.pop();
-        if (!g.discovered[v]) {
-            componentsFound++;
-            cout << "Component " << componentsFound << ": ";
-            dfs2(gt, v);
+    vector<bool> visited(V, false);
+    for (int i = 0; i < V; i++)
+        if (!visited[i])
+            fillOrder(i, visited, stack);
+
+    Graph transposed = getTranspose();
+
+    fill(visited.begin(), visited.end(), false);
+
+    while (!stack.empty()) {
+        int v = stack.top();
+        stack.pop();
+
+        if (!visited[v]) {
+            transposed.DFSUtil(v, visited);
             cout << endl;
         }
     }
 }
 
 int main() {
-    // Example usage and test
-    int nvertices = 5;
-    Graph g(nvertices);
-
-    // Adding edges (1-indexed)
+    Graph g(5);
+    g.addEdge(0, 1);
     g.addEdge(1, 2);
-    g.addEdge(2, 3);
-    g.addEdge(3, 1);
-    g.addEdge(4, 2);
-    g.addEdge(4, 5);
+    g.addEdge(2, 0);
+    g.addEdge(1, 3);
+    g.addEdge(3, 4);
 
-    strongComponents(g);
+    cout << "Strongly Connected Components:\n";
+    g.printSCCs();
 
     return 0;
 }
