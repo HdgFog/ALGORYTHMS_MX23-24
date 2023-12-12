@@ -73,14 +73,6 @@ void bfs(graph *g, int start) {
     }
 }
 
-void process_edge(int x, int y) {
-    // implementation of process_edge function
-}
-
-int complement(int color) {
-    // implementation of complement function
-}
-
 int main() {
     graph g;
     g.nvertices = 6;
@@ -98,16 +90,16 @@ int main() {
 
     // Print the coloring result
     int i;
-    printf("Coloring Result:\n");
+    printf("Результат раскраски:\n");
     for (i = 1; i <= g.nvertices; i++) {
         if (color[i] == WHITE) {
-            printf("Vertex %d: White\n", i);
+            printf("Вершина %d: Белый\n", i);
         } else if (color[i] == BLACK) {
-            printf("Vertex %d: Black\n", i);
+            printf("Вершина %d: Черный\n", i);
         } else {
-            printf("Vertex %d: Not colored\n", i);
+            printf("Вершина %d: Не раскрашена\n", i);
         }
     }
 
     return 0;
-} 
+}
