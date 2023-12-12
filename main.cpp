@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <unordered_map>
+#include <stack>
 
 using namespace std;
 
@@ -26,8 +27,12 @@ struct Graph {
         // Массив для отслеживания посещенных вершин
         vector<bool> visited(V, false);
 
+        // Массив для отслеживания предшественников вершин
+        unordered_map<int, int> parent;
+
         // Начальная вершина добавляется в очередь
         pq.push(make_pair(0, source));
+        parent[source] = -1;
 
         while (!pq.empty()) {
             int u = pq.top().second;
@@ -36,6 +41,8 @@ struct Graph {
             // Если найден целевой узел
             if (u == target) {
                 cout << "Кратчайший путь до вершины " << target << " найден." << endl;
+                cout << "Путь: ";
+                printPath(parent, target);
                 return;
             }
 
@@ -49,11 +56,28 @@ struct Graph {
 
                 if (!visited[v]) {
                     pq.push(make_pair(weight, v));
+                    parent[v] = u;
                 }
             }
         }
 
         cout << "Кратчайший путь до вершины " << target << " не найден." << endl;
+    }
+
+    // Вспомогательная функция для вывода пути
+    void printPath(unordered_map<int, int>& parent, int target) {
+        stack<int> path;
+        int current = target;
+        while (current != -1) {
+            path.push(current);
+            current = parent[current];
+        }
+
+        while (!path.empty()) {
+            cout << path.top() << " ";
+            path.pop();
+        }
+        cout << endl;
     }
 };
 
