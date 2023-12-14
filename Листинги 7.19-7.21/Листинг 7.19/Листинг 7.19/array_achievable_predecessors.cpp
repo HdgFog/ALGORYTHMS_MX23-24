@@ -47,7 +47,7 @@ int main() {
     dfs(1, adj);
 
     // Выводим массив reachable_ancestor, содержащий информацию о достижимых предках для каждой вершины графа
-    for (int i = 1; i <= n; ++i) {
+    for (int i = 1; i <= 7; ++i) {
         std::cout << reachable_ancestor[i] << " ";
     }
     std::cout << std::endl;
