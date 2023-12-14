@@ -32,15 +32,11 @@ void dfs(int v, const std::vector<std::vector<int>>& adj) {
 }
 
 int main() {
-    // Считываем количество вершин n и количество ребер m
-    int n, m;
-    std::cin >> n >> m;
-
     // Создаем список смежности для хранения графа
-    std::vector<std::vector<int>> adj(n + 1);
+    std::vector<std::vector<int>> adj(8);
 
     // Считываем ребра графа,соедененые верщинами, и добавляем их в список смежности
-    for (int i = 0; i < m; ++i) {
+    for (int i = 0; i < 8; ++i) {
         int u, v;
         std::cin >> u >> v;
         adj[u].push_back(v);
