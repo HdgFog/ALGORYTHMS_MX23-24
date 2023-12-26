@@ -16,3 +16,8 @@ long fib_ultimate(int n)
     }
     return back1;
 }
+
+int main()
+{
+    cout << fib_ultimate(7) << endl;
+}
